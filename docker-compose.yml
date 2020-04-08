@@ -1,6 +1,6 @@
 version: '3'
 services:
-        dev:
+        dev-frontend:
                 image: node:13
                 volumes:
                         - ./frontend:/usr/src/frontend
@@ -8,4 +8,11 @@ services:
                 command: yarn serve:dev
                 ports:
                         - 8080:8080
-
+        dev-api:
+                image: rustlang/rust:nightly
+                volumes:
+                        - ./api:/usr/src/journali-api
+                working_dir: /usr/src/journali-api
+                command: cargo run server
+                ports:
+                        - 8000:8000
