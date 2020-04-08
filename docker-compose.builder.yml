@@ -1,0 +1,19 @@
+version: '2'
+services:
+        base:
+                image: node:13
+                volumes:
+                        - ./frontend:/usr/src/frontend
+                working_dir: /usr/src/frontend
+        install:
+                extends:
+                        service: base
+                command: yarn
+        build-dev:
+                extends:
+                        service: base
+                command: yarn build:dev
+        build-prod:
+                extends:
+                        service: base
+                command: yarn build:prod

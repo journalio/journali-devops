@@ -1,0 +1,11 @@
+version: '3'
+services:
+        dev:
+                image: node:13
+                volumes:
+                        - ./frontend:/usr/src/frontend
+                working_dir: /usr/src/frontend
+                command: yarn serve:dev
+                ports:
+                        - 8080:8080
+
