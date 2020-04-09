@@ -43,6 +43,8 @@ case $1 in
  - migrate: Migrate the database
  - start: Start the development environment
  - stop: Stop the development environment
+ - yarn [command]: Run any yarn command on the frontend environment
+ - cargo [command]: Run any cargo command on the api environment
  - help: This command"
         ;;
     *)
