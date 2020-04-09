@@ -25,6 +25,8 @@ jobs:
         uses: actions/checkout@v2
       - name: Prettier Action
         uses: creyD/prettier_action@v2.2
+        with:
+            prettier_options: --check ".github/**/*.yml" "./*.{yml,md}"
 
   shell-linter:
     name: Shell Linter
