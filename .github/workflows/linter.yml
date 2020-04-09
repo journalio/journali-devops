@@ -26,7 +26,7 @@ jobs:
             - name: Install prettier
               run: yarn global add prettier
             - name: Run prettier
-              run: prettier --check "**.{md,yml}" ".github/**/*.yml"
+              run: $(yarn global bin)/prettier --check "**.{md,yml}" ".github/**/*.yml"
 
     shell-linter:
         name: Shell Linter
