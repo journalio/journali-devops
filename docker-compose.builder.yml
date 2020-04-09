@@ -1,19 +1,30 @@
-version: '2'
+version: '3.4'
+
+x-frontend-base: &frontend-base
+    image: node:alpine
+    volumes:
+        - ./journali-frontend:/usr/src/frontend
+    working_dir: /usr/src/frontend
+    entrypoint: yarn
+
+x-api-base: &api-base
+    image: rustlang/rust:nightly
+    volumes:
+        - ./journali-api:/usr/src/api
+    working_dir: /usr/src/api
+    entrypoint: cargo
+
 services:
-        base:
-                image: node:13
-                volumes:
-                        - ./frontend:/usr/src/frontend
-                working_dir: /usr/src/frontend
-        install:
-                extends:
-                        service: base
-                command: yarn
-        build-dev:
-                extends:
-                        service: base
-                command: yarn build:dev
-        build-prod:
-                extends:
-                        service: base
-                command: yarn build:prod
+    cargo:
+        <<: *api-base
+    yarn:
+        <<: *frontend-base
+    install:
+        <<: *frontend-base
+        command: install
+    build-dev:
+        <<: *frontend-base
+        command: build:dev
+    build-prod:
+        <<: *frontend-base
+        command: build:prod
