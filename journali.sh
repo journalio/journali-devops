@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-echo "      _                              _ _ 
+echo "      _                              _ _
      | |                            | (_)
-     | | ___  _   _ _ __ _ __   __ _| |_ 
+     | | ___  _   _ _ __ _ __   __ _| |_
  _   | |/ _ \| | | | '__| '_ \ / _\` | | |
 | |__| | (_) | |_| | |  | | | | (_| | | |
  \____/ \___/ \__,_|_|  |_| |_|\__,_|_|_|
@@ -33,7 +33,7 @@ case $1 in
         docker-compose down
         ;;
     yarn | cargo)
-        echo "Running: "$BASE_COMMAND ${@:1}
+        echo "- Running: "$BASE_COMMAND ${@:1}
         eval $BASE_COMMAND ${@:1}
         ;;
     help)
