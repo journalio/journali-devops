@@ -3,14 +3,14 @@ version: '3.4'
 x-frontend-base: &frontend-base
     image: node:alpine
     volumes:
-        - ./frontend:/usr/src/frontend
+        - ./journali-frontend:/usr/src/frontend
     working_dir: /usr/src/frontend
     entrypoint: yarn
 
 x-api-base: &api-base
     image: rustlang/rust:nightly
     volumes:
-        - ./api:/usr/src/api
+        - ./journali-api:/usr/src/api
     working_dir: /usr/src/api
     entrypoint: cargo
 

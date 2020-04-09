@@ -4,7 +4,7 @@ services:
     frontend:
         image: node:alpine
         volumes:
-            - ./frontend:/usr/src/frontend
+            - ./journali-frontend:/usr/src/frontend
         working_dir: /usr/src/frontend
         command: yarn serve:dev
         ports:
@@ -12,7 +12,7 @@ services:
     api:
         image: rustlang/rust:nightly
         volumes:
-            - ./api:/usr/src/api
+            - ./journali-api:/usr/src/api
         working_dir: /usr/src/api
         command: cargo run server
         expose:

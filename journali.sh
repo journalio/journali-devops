@@ -9,12 +9,16 @@ echo "      _                              _ _
 "
 
 BASE_COMMAND="docker-compose -f docker-compose.builder.yml run --rm"
+API_REPOSITORY="git@github.com:WesleyKlop/journali-api.git"
+API_FOLDER="journali-api"
+FRONTEND_REPOSITORY="git@github.com:WesleyKlop/journali-frontend.git"
+FRONTEND_FOLDER="journali-frontend"
 
 case $1 in
     init)
         echo " - Initializing repository"
-        git clone git@github.com:WesleyKlop/journali-frontend.git frontend
-        git clone git@github.com:WesleyKlop/journali-api.git api
+        git clone $API_REPOSITORY $API_FOLDER
+        git clone $FRONTEND_REPOSITORY $FRONTEND_FOLDER
         ;;
     install)
         echo " - Installing frontend dependencies for the frontend"
