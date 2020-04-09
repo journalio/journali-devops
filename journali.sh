@@ -32,6 +32,10 @@ case $1 in
         echo " - Stopping development environment"
         docker-compose down
         ;;
+    yarn | cargo)
+        echo "Running: "$BASE_COMMAND ${@:1}
+        eval $BASE_COMMAND ${@:1}
+        ;;
     help)
         echo "Available commands:
  - init: Initialize the child repositories

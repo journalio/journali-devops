@@ -2,7 +2,7 @@ version: '3'
 
 services:
     frontend:
-        image: node:13
+        image: node:alpine
         volumes:
             - ./frontend:/usr/src/frontend
         working_dir: /usr/src/frontend
