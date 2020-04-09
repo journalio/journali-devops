@@ -48,6 +48,6 @@ case $1 in
  - help: This command"
         ;;
     *)
-        echo "Unknown command \"$1\""
+        echo "Unknown command \"$1\"" 1>&2
         exit 1
 esac
