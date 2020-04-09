@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+BASE_COMMAND="docker-compose -f docker-compose.builder.yml run --rm"
+API_REPOSITORY="git@github.com:WesleyKlop/journali-api.git"
+API_FOLDER="journali-api"
+FRONTEND_REPOSITORY="git@github.com:WesleyKlop/journali-frontend.git"
+FRONTEND_FOLDER="journali-frontend"
 
 echo "      _                              _ _
      | |                            | (_)
@@ -8,17 +13,37 @@ echo "      _                              _ _
  \____/ \___/ \__,_|_|  |_| |_|\__,_|_|_|
 "
 
-BASE_COMMAND="docker-compose -f docker-compose.builder.yml run --rm"
-API_REPOSITORY="git@github.com:WesleyKlop/journali-api.git"
-API_FOLDER="journali-api"
-FRONTEND_REPOSITORY="git@github.com:WesleyKlop/journali-frontend.git"
-FRONTEND_FOLDER="journali-frontend"
+function init_repos() {
+    if [ -d $API_FOLDER ] && [ -d $FRONTEND_FOLDER ]; then
+        echo "Already initialized" 1>&2
+        exit 1
+    fi
+
+    if [ ! -d $API_FOLDER ]; then
+        git clone $API_REPOSITORY $API_FOLDER
+    fi
+
+    if [ ! -d $FRONTEND_FOLDER ]; then
+        git clone $FRONTEND_REPOSITORY $FRONTEND_FOLDER
+    fi
+}
+
+function print_help() {
+    echo "Available commands:
+ - init: Initialize the child repositories
+ - install: Intall frontend node dependencies
+ - migrate: Migrate the database
+ - start: Start the development environment
+ - stop: Stop the development environment
+ - yarn [command]: Run any yarn command on the frontend environment
+ - cargo [command]: Run any cargo command on the api environment
+ - help: This command"
+}
 
 case $1 in
 init)
     echo " - Initializing repository"
-    git clone $API_REPOSITORY $API_FOLDER
-    git clone $FRONTEND_REPOSITORY $FRONTEND_FOLDER
+    init_repos
     ;;
 install)
     echo " - Installing frontend dependencies for the frontend"
@@ -41,15 +66,7 @@ yarn | cargo)
     eval "$BASE_COMMAND" "${*:1}"
     ;;
 help)
-    echo "Available commands:
- - init: Initialize the child repositories
- - install: Intall frontend node dependencies
- - migrate: Migrate the database
- - start: Start the development environment
- - stop: Stop the development environment
- - yarn [command]: Run any yarn command on the frontend environment
- - cargo [command]: Run any cargo command on the api environment
- - help: This command"
+    print_help
     ;;
 *)
     echo "Unknown command \"$1\"" 1>&2
