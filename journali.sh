@@ -32,6 +32,15 @@ case $1 in
         echo " - Stopping development environment"
         docker-compose down
         ;;
+    help)
+        echo "Available commands:
+ - init: Initialize the child repositories
+ - install: Intall frontend node dependencies
+ - migrate: Migrate the database
+ - start: Start the development environment
+ - stop: Stop the development environment
+ - help: This command"
+        ;;
     *)
         echo "Unknown command \"$1\""
         exit 1
