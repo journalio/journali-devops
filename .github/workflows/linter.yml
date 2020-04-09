@@ -21,12 +21,13 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Cloning the repository
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+        # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
         uses: actions/checkout@v2
       - name: Prettier Action
         uses: creyD/prettier_action@v2.2
         with:
-            prettier_options: --check ".github/**/*.yml" "./*.{yml,md}"
+          dry: true
+          prettier_options: --check .github/**/*.yml ./*.{yml,md}
 
   shell-linter:
     name: Shell Linter
