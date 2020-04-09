@@ -1,18 +1,27 @@
-version: "3"
+version: '3'
+
 services:
-  dev-frontend:
-    image: node:13
-    volumes:
-      - ./frontend:/usr/src/frontend
-    working_dir: /usr/src/frontend
-    command: yarn serve:dev
-    ports:
-      - 8080:8080
-  dev-api:
-    image: rustlang/rust:nightly
-    volumes:
-      - ./api:/usr/src/journali-api
-    working_dir: /usr/src/journali-api
-    command: cargo run server
-    ports:
-      - 8000:8000
+    frontend:
+        image: node:alpine
+        volumes:
+            - ./journali-frontend:/usr/src/frontend
+        working_dir: /usr/src/frontend
+        command: yarn serve:dev
+        ports:
+            - 8080:8080
+    api:
+        image: rustlang/rust:nightly
+        volumes:
+            - ./journali-api:/usr/src/api
+        working_dir: /usr/src/api
+        command: cargo run server
+        expose:
+            - 8000
+    db:
+        image: postgres:latest
+        volumes:
+            - db-data:/var/lib/postgresql/data
+        env_file: ./dev.env
+
+volumes:
+    db-data:
