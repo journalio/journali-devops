@@ -23,11 +23,10 @@ jobs:
       - name: Cloning the repository
         # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
         uses: actions/checkout@v2
-      - name: Prettier Action
-        uses: creyD/prettier_action@v2.2
-        with:
-          dry: true
-          prettier_options: --check .github/**/*.yml ./*.{yml,md}
+      - name: Install prettier
+        run: yarn global add prettier
+      - name: Run prettier
+        run: prettier --check **.{md,yml} .github/**/*.yml
 
   shell-linter:
     name: Shell Linter
