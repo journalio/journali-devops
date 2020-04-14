@@ -13,9 +13,7 @@ services:
         image: rust:latest
         volumes:
             - ./journali-api:/usr/src/api
-            - ./.cache/cargo:/usr/local/cargo-cache
-        environment:
-            - CARGO_HOME=/usr/local/cargo-cache
+            - ./.cache/cargo:/usr/local/cargo/registry
         working_dir: /usr/src/api
         entrypoint: cargo
         command: run server
