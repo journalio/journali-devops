@@ -14,6 +14,7 @@ services:
         volumes:
             - ./journali-api:/usr/src/api
             - ./.cache/cargo:/usr/local/cargo/registry
+            - ./cargo-config.toml:/usr/local/cargo/config
         working_dir: /usr/src/api
         entrypoint: cargo
         command: run server
