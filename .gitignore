@@ -1,2 +1,6 @@
+# Child repositories
 /journali-frontend
 /journali-api
+
+# Cache directories
+.cache/cargo

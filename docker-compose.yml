@@ -13,9 +13,10 @@ services:
         image: rust:latest
         volumes:
             - ./journali-api:/usr/src/api
-            - $HOME/.cargo/registry:/root/.cargo/registry
+            - ./.cache/cargo:/usr/local/cargo/registry
         working_dir: /usr/src/api
-        command: cargo run server
+        entrypoint: cargo
+        command: run server
         expose:
             - 8000
     db:
