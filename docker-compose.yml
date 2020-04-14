@@ -13,6 +13,7 @@ services:
         image: rust:latest
         volumes:
             - ./journali-api:/usr/src/api
+            - $HOME/.cargo/registry:/root/.cargo/registry
         working_dir: /usr/src/api
         command: cargo run server
         expose:
@@ -22,6 +23,8 @@ services:
         volumes:
             - db-data:/var/lib/postgresql/data
         env_file: ./dev.env
+        expose:
+            - 5432
 
 volumes:
     db-data:

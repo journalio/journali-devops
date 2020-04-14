@@ -11,6 +11,7 @@ x-api-base: &api-base
     image: rust:latest
     volumes:
         - ./journali-api:/usr/src/api
+        - $HOME/.cargo/registry:/root/.cargo/registry
     working_dir: /usr/src/api
     entrypoint: cargo
 
