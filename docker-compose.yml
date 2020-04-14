@@ -2,7 +2,7 @@ version: '3'
 
 services:
     frontend:
-        image: node:alpine
+        image: node:latest
         volumes:
             - ./journali-frontend:/usr/src/frontend
         working_dir: /usr/src/frontend
@@ -10,7 +10,7 @@ services:
         ports:
             - 8080:8080
     api:
-        image: rustlang/rust:nightly
+        image: rust:latest
         volumes:
             - ./journali-api:/usr/src/api
         working_dir: /usr/src/api
