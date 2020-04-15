@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 BASE_COMMAND="docker-compose -f docker-compose.builder.yml run --rm"
-API_REPOSITORY="git@github.com:journalio/journali-api.git"
+API_REPOSITORY="git@github.com:WesleyKlop/journali-api.git"
 API_FOLDER="journali-api"
-FRONTEND_REPOSITORY="git@github.com:journalio/journali-frontend.git"
+FRONTEND_REPOSITORY="git@github.com:WesleyKlop/journali-frontend.git"
 FRONTEND_FOLDER="journali-frontend"
 
 echo "      _                              _ _
