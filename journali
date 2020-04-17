@@ -32,7 +32,7 @@ function init_repos() {
 
 function print_help() {
     echo "Available commands:
- - init: Initialize the child repositories
+ - init: Initialize the child repositories and docker requirements
  - install: Intall frontend node dependencies
  - migrate: Migrate the database
  - start: Start the development environment
