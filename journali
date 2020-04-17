@@ -22,17 +22,17 @@ function print_banner() {
 
 # Initialize git repositories
 function init_repos() {
-    if [ -d $API_FOLDER ] && [ -d $FRONTEND_FOLDER ]; then
+    if [ -d "${API_FOLDER}" ] && [ -d "${FRONTEND_FOLDER}" ]; then
         echo "Already initialized" 1>&2
         return
     fi
 
-    if [ ! -d $API_FOLDER ]; then
-        git clone $API_REPOSITORY $API_FOLDER
+    if [ ! -d "${API_FOLDER}" ]; then
+        git clone "${API_REPOSITORY}" "${API_FOLDER}"
     fi
 
-    if [ ! -d $FRONTEND_FOLDER ]; then
-        git clone $FRONTEND_REPOSITORY $FRONTEND_FOLDER
+    if [ ! -d "${FRONTEND_FOLDER}" ]; then
+        git clone "${FRONTEND_REPOSITORY}" "${FRONTEND_FOLDER}"
     fi
 }
 
@@ -66,11 +66,11 @@ function init_docker() {
 
 # Installs dependencies for the frontend project using yarn
 function install_frontend_dependencies() {
-    if [ ! -d $FRONTEND_FOLDER ]; then
+    if [ ! -d "${FRONTEND_FOLDER}" ]; then
         echo "The frontend repository could not be found. Maybe try running the \`init\` command first?" 1>&2
         exit 1
     fi
-    eval "$BASE_COMMAND" install
+    eval "${BASE_COMMAND}" install
 }
 
 print_banner
@@ -97,11 +97,11 @@ stop)
     docker-compose down --remove-orphans
     ;;
 yarn | cargo | diesel | migrate)
-    echo "- Running: $BASE_COMMAND ${*:1}"
-    eval "$BASE_COMMAND" "${*:1}"
+    echo "- Running: ${BASE_COMMAND} ${*:1}"
+    eval "${BASE_COMMAND}" "${*:1}"
     ;;
 psql)
-    docker-compose exec postgres psql -U "$POSTGRES_USER" -w -d "$POSTGRES_DB"
+    docker-compose exec postgres psql -U "${POSTGRES_USER}" -w -d "${POSTGRES_DB}"
     ;;
 help)
     print_help
