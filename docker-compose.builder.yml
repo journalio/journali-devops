@@ -14,6 +14,8 @@ x-api-base: &api-base
         - ./.cache/cargo:/usr/local/cargo/registry
     working_dir: /usr/src/api
     entrypoint: cargo
+    networks:
+        - journali
 
 services:
     cargo:
@@ -29,3 +31,18 @@ services:
     build-prod:
         <<: *frontend-base
         command: build:prod
+    diesel:
+        <<: *api-base
+        image: christophwurst/diesel-cli
+        entrypoint: diesel
+        env_file: dev.env
+    migrate:
+        <<: *api-base
+        image: christophwurst/diesel-cli
+        entrypoint: diesel
+        command: migration run
+        env_file: dev.env
+
+networks:
+    journali:
+        external: true

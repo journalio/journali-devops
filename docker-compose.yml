@@ -9,24 +9,36 @@ services:
         command: yarn serve:dev
         ports:
             - 8080:8080
+        networks:
+            - internal
     api:
         image: rust:latest
         volumes:
             - ./journali-api:/usr/src/api
             - ./.cache/cargo:/usr/local/cargo/registry
             - ./cargo-config.toml:/usr/local/cargo/config
+        networks:
+            - internal
         working_dir: /usr/src/api
         entrypoint: cargo
         command: run server
         expose:
             - 8000
-    db:
+    postgres:
         image: postgres:latest
         volumes:
             - db-data:/var/lib/postgresql/data
         env_file: ./dev.env
         expose:
             - 5432
+        networks:
+            - internal
+            - journali
 
 volumes:
     db-data:
+
+networks:
+    journali:
+        external: true
+    internal:

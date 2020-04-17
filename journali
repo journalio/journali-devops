@@ -5,6 +5,8 @@ API_FOLDER="journali-api"
 FRONTEND_REPOSITORY="git@github.com:WesleyKlop/journali-frontend.git"
 FRONTEND_FOLDER="journali-frontend"
 
+source ./dev.env
+
 echo "      _                              _ _
      | |                            | (_)
      | | ___  _   _ _ __ _ __   __ _| |_
@@ -16,7 +18,7 @@ echo "      _                              _ _
 function init_repos() {
     if [ -d $API_FOLDER ] && [ -d $FRONTEND_FOLDER ]; then
         echo "Already initialized" 1>&2
-        exit 1
+        return
     fi
 
     if [ ! -d $API_FOLDER ]; then
@@ -35,23 +37,28 @@ function print_help() {
  - migrate: Migrate the database
  - start: Start the development environment
  - stop: Stop the development environment
+ - psql: Open a shell on the postgres database
  - yarn [command]: Run any yarn command on the frontend environment
  - cargo [command]: Run any cargo command on the api environment
+ - diesel [command]: Run any diesel commando on the database environment
  - help: This command"
+}
+
+function init_docker() {
+    docker network rm journali
+    docker network create journali
 }
 
 case $1 in
 init)
     echo " - Initializing repository"
     init_repos
+    echo " - Creating docker networks"
+    init_docker
     ;;
 install)
     echo " - Installing frontend dependencies for the frontend"
     eval "$BASE_COMMAND" install
-    ;;
-migrate)
-    echo " - Migrating database"
-    # TODO
     ;;
 start)
     echo " - Starting development environment"
@@ -59,17 +66,21 @@ start)
     ;;
 stop)
     echo " - Stopping development environment"
-    docker-compose down
+    docker-compose down --remove-orphans
     ;;
-yarn | cargo)
+yarn | cargo | diesel | migrate)
     echo "- Running: $BASE_COMMAND ${*:1}"
     eval "$BASE_COMMAND" "${*:1}"
+    ;;
+psql)
+    docker-compose exec postgres psql -U $POSTGRES_USER -w -d $POSTGRES_DB
     ;;
 help)
     print_help
     ;;
 *)
     echo "Unknown command \"$1\"" 1>&2
+    print_help
     exit 1
     ;;
 esac
