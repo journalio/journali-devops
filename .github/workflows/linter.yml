@@ -36,4 +36,4 @@ jobs:
             - name: Cloning the repository
               uses: actions/checkout@v2
             - name: Run shellcheck
-              run: shellcheck journali
+              run: shellcheck -x journali
