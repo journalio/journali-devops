@@ -1,57 +1,98 @@
 #!/usr/bin/env bash
+
+set -e
+
+# Environment variables
 BASE_COMMAND="docker-compose -f docker-compose.builder.yml run --rm"
 API_REPOSITORY="git@github.com:WesleyKlop/journali-api.git"
 API_FOLDER="journali-api"
 FRONTEND_REPOSITORY="git@github.com:WesleyKlop/journali-frontend.git"
 FRONTEND_FOLDER="journali-frontend"
 
-echo "      _                              _ _
+# External variables also used by services
+source dev.env
+
+function print_banner() {
+    echo "      _                              _ _
      | |                            | (_)
      | | ___  _   _ _ __ _ __   __ _| |_
  _   | |/ _ \| | | | '__| '_ \ / _\` | | |
 | |__| | (_) | |_| | |  | | | | (_| | | |
  \____/ \___/ \__,_|_|  |_| |_|\__,_|_|_|
 "
+}
 
+# Initialize git repositories
 function init_repos() {
-    if [ -d $API_FOLDER ] && [ -d $FRONTEND_FOLDER ]; then
+    if [ -d "${API_FOLDER}" ] && [ -d "${FRONTEND_FOLDER}" ]; then
         echo "Already initialized" 1>&2
+        return
+    fi
+
+    if [ ! -d "${API_FOLDER}" ]; then
+        git clone "${API_REPOSITORY}" "${API_FOLDER}"
+    fi
+
+    if [ ! -d "${FRONTEND_FOLDER}" ]; then
+        git clone "${FRONTEND_REPOSITORY}" "${FRONTEND_FOLDER}"
+    fi
+}
+
+# Print application help text
+function print_help() {
+    cat <<-EOF
+Journali CLI tool for managing a productive development environment.
+
+Usage:
+  journali [command] [argument ...]
+
+Available commands:
+  - init                   Initialize the project, environment and dependencies
+  - start                  Start the development environment
+  - stop                   Stop the development environment
+  - install                Intall frontend node dependencies
+  - migrate                Migrate the database
+  - psql                   Open a shell on the postgres database
+  - yarn [subcommand]      Run any yarn command on the frontend environment
+  - cargo [subcommand]     Run any cargo command on the api environment
+  - diesel [subcommand]    Run any diesel commando on the database environment
+  - help                   This command
+EOF
+}
+
+# Initializes requirements for the docker environment
+function init_docker() {
+    # Only create if the network does not already exist
+    if ! docker network inspect journali >/dev/null 2>&1; then
+        docker network create journali
+    else
+        echo "Already initialized"
+    fi
+}
+
+# Installs dependencies for the frontend project using yarn
+function install_frontend_dependencies() {
+    if [ ! -d "${FRONTEND_FOLDER}" ]; then
+        echo "The frontend repository could not be found. Maybe try running the \`init\` command first?" 1>&2
         exit 1
     fi
-
-    if [ ! -d $API_FOLDER ]; then
-        git clone $API_REPOSITORY $API_FOLDER
-    fi
-
-    if [ ! -d $FRONTEND_FOLDER ]; then
-        git clone $FRONTEND_REPOSITORY $FRONTEND_FOLDER
-    fi
+    eval "${BASE_COMMAND}" install
 }
 
-function print_help() {
-    echo "Available commands:
- - init: Initialize the child repositories
- - install: Intall frontend node dependencies
- - migrate: Migrate the database
- - start: Start the development environment
- - stop: Stop the development environment
- - yarn [command]: Run any yarn command on the frontend environment
- - cargo [command]: Run any cargo command on the api environment
- - help: This command"
-}
+print_banner
 
 case $1 in
 init)
     echo " - Initializing repository"
     init_repos
+    echo " - Creating docker networks"
+    init_docker
+    echo " - Installing frontend dependencies"
+    install_frontend_dependencies
     ;;
 install)
-    echo " - Installing frontend dependencies for the frontend"
-    eval "$BASE_COMMAND" install
-    ;;
-migrate)
-    echo " - Migrating database"
-    # TODO
+    echo " - Installing frontend dependencies"
+    install_frontend_dependencies
     ;;
 start)
     echo " - Starting development environment"
@@ -59,17 +100,21 @@ start)
     ;;
 stop)
     echo " - Stopping development environment"
-    docker-compose down
+    docker-compose down --remove-orphans
     ;;
-yarn | cargo)
-    echo "- Running: $BASE_COMMAND ${*:1}"
-    eval "$BASE_COMMAND" "${*:1}"
+yarn | cargo | diesel | migrate)
+    echo "- Running: ${BASE_COMMAND} ${*:1}"
+    eval "${BASE_COMMAND}" "${*:1}"
+    ;;
+psql)
+    docker-compose exec postgres psql -U "${POSTGRES_USER}" -w -d "${POSTGRES_DB}"
     ;;
 help)
     print_help
     ;;
 *)
     echo "Unknown command \"$1\"" 1>&2
+    print_help
     exit 1
     ;;
 esac
