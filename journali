@@ -2,15 +2,15 @@
 
 set -e
 
+# Script dir
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+
 # Environment variables
 BASE_COMMAND="docker-compose -f docker-compose.builder.yml run --rm"
 API_REPOSITORY="git@github.com:WesleyKlop/journali-api.git"
 API_FOLDER="journali-api"
 FRONTEND_REPOSITORY="git@github.com:WesleyKlop/journali-frontend.git"
 FRONTEND_FOLDER="journali-frontend"
-
-# External variables also used by services
-source dev.env
 
 function print_banner() {
     echo "      _                              _ _
@@ -79,6 +79,16 @@ function install_frontend_dependencies() {
     eval "${BASE_COMMAND}" install
 }
 
+######
+# Main
+######
+pushd "$DIR" >/dev/null
+exitCode=0
+
+# External variables also used by services
+source dev.env
+
+# Fancy banner
 print_banner
 
 case $1 in
@@ -107,14 +117,20 @@ yarn | cargo | diesel | migrate)
     eval "${BASE_COMMAND}" "${*:1}"
     ;;
 psql)
+    echo "- Starting postgres shell"
     docker-compose exec postgres psql -U "${POSTGRES_USER}" -w -d "${POSTGRES_DB}"
     ;;
 help)
     print_help
     ;;
 *)
-    echo "Unknown command \"$1\"" 1>&2
+    echo "Unknown command \"$1\", showing help:" 1>&2
     print_help
-    exit 1
+    exitCode=1
     ;;
 esac
+
+# Restore working directory
+popd >/dev/null
+
+exit $exitCode
