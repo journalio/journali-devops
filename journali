@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 # Environment variables
 BASE_COMMAND="docker-compose -f docker-compose.builder.yml run --rm"
 API_REPOSITORY="git@github.com:WesleyKlop/journali-api.git"
@@ -60,8 +62,12 @@ EOF
 
 # Initializes requirements for the docker environment
 function init_docker() {
-    docker network rm journali
-    docker network create journali
+    # Only create if the network does not already exist
+    if ! docker network inspect journali >/dev/null 2>&1; then
+        docker network create journali
+    else
+        echo "Already initialized"
+    fi
 }
 
 # Installs dependencies for the frontend project using yarn
