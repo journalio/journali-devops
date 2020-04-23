@@ -25,12 +25,6 @@ services:
     install:
         <<: *frontend-base
         command: install
-    build-dev:
-        <<: *frontend-base
-        command: build:dev
-    build-prod:
-        <<: *frontend-base
-        command: build:prod
     diesel:
         <<: *api-base
         image: christophwurst/diesel-cli

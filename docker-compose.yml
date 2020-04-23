@@ -6,7 +6,7 @@ services:
         volumes:
             - ./journali-frontend:/usr/src/frontend
         working_dir: /usr/src/frontend
-        command: yarn serve:dev
+        command: yarn serve
         ports:
             - 8080:8080
         networks:
@@ -24,6 +24,7 @@ services:
         command: run server
         expose:
             - 8000
+        env_file: dev.env
     postgres:
         image: postgres:latest
         volumes:
