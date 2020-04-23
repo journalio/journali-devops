@@ -6,7 +6,7 @@ services:
         volumes:
             - ./journali-frontend:/usr/src/frontend
         working_dir: /usr/src/frontend
-        command: yarn serve:dev
+        command: yarn serve
         ports:
             - 8080:8080
         networks:
