@@ -24,6 +24,7 @@ services:
         command: run server
         expose:
             - 8000
+        env_file: dev.env
     postgres:
         image: postgres:latest
         volumes:
