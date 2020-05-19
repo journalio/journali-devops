@@ -11,6 +11,8 @@ services:
             - 8080:8080
         networks:
             - internal
+        environment:
+            DOCKER: 1
     api:
         image: rust:latest
         volumes:
